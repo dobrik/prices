@@ -42,7 +42,7 @@ class user
     public function signUp()
     {
         if($this->password && $this->username){
-            
+
         }else{
             return 'Check input data!';
         }
