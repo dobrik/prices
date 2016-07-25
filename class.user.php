@@ -15,6 +15,20 @@ class user
         $this->remember = $remember;
     }
 
+    protected function checkLogin($login)
+    {
+        if ($login) {
+            $query = $this->link->query("SELECT id FROM users WHERE `username`='{$login}'");
+            if ($query->num_rows === 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     public function signIn()
     {
         if ($this->password && $this->username) {
@@ -41,9 +55,9 @@ class user
 
     public function signUp()
     {
-        if($this->password && $this->username){
-            
-        }else{
+        if (strlen($this->password) > 5 && $this->checkLogin($this->username)) {
+            echo 'yes!';
+        } else {
             return 'Check input data!';
         }
     }

@@ -2,10 +2,10 @@
 include_once 'config.php';
 include_once 'class.user.php';
 
-$users = new user('user', 'test', true);
-$users->signIn();
+$users = new user('user2', 'test66', true);
+$users->signUp();
 
-var_dump($_SESSION);
+//var_dump($_SESSION);
 
 
 
