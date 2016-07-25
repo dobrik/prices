@@ -2,32 +2,16 @@
 include_once 'config.php';
 
 
-class names
-{
-    private $name;
-
-    public function __construct($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName()
-    {
-        echo $this->name;
-    }
-}
-
 class user
 {
-    private $username, $password, $remember, $forgot;
+    private $username, $password, $remember;
 
-    public function __construct($username, $password, $remember = false, $forgot = false)
+    public function __construct($username, $password, $remember = false)
     {
         global $link;
         $this->link = $link;
         $this->username = $username;
         $this->password = $password;
-        $this->forgot = $forgot;
         $this->remember = $remember;
     }
 
@@ -35,7 +19,8 @@ class user
     {
         if ($this->password && $this->username) {
             $md5pass = md5($this->password);
-            $logQuery = $this->link->query("SELECT username FROM users WHERE `username`='{$this->username}' AND `password`='{$md5pass}'");
+            $login = $this->link->real_escape_string($this->username);
+            $logQuery = $this->link->query("SELECT username FROM users WHERE `username`='{$login}' AND `password`='{$md5pass}'");
             if ($this->link->error) {
                 echo "Mysql error: " . $this->link->error;
                 exit;
@@ -43,11 +28,23 @@ class user
             if ($logQuery->num_rows === 1) {
                 $_SESSION['logged'] = 'true';
                 $_SESSION['username'] = $this->username;
+                $_SESSION['ssid'] = $_COOKIE['PHPSESSID'];
+                if ($this->remember) {
+                    setcookie('remember', true, time() + 60 * 60 * 24 * 7);
+                }
+                return true;
             } else {
                 return 'Wrong password or username!';
             }
+        }
+    }
 
-            return var_dump($logQuery->num_rows);
+    public function signUp()
+    {
+        if($this->password && $this->username){
+            
+        }else{
+            return 'Check input data!';
         }
     }
 }
